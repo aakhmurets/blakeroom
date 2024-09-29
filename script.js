@@ -5,8 +5,8 @@ const sensitivityThreshold = 3;  // Increase to reduce sensitivity (try values l
 
 // Load Models
 async function loadModels() {
-    await faceapi.nets.tinyFaceDetector.loadFromUri('https://aakhmurets.github.io/eyecontact/models/tiny_face_detector_model-weights_manifest.json');
-    await faceapi.nets.faceLandmark68Net.loadFromUri('./eyecontact/models');
+    await faceapi.nets.tinyFaceDetector.loadFromUri('./models/tiny_face_detector_model-weights_manifest.json');
+    await faceapi.nets.faceLandmark68Net.loadFromUri('./models');
 }
 
 async function setupCamera() {
