@@ -5,8 +5,8 @@ const sensitivityThreshold = 3;  // Increase to reduce sensitivity (try values l
 
 // Load Models
 async function loadModels() {
-    await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
-    await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
+    await faceapi.nets.tinyFaceDetector.loadFromUri('./models');
+    await faceapi.nets.faceLandmark68Net.loadFromUri('./models');
 }
 
 async function setupCamera() {
