@@ -10,9 +10,11 @@
 
   gtag('config', 'G-G540Q0NVB7');
 </script>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Read the Room</title>
+    <title>eyecontact</title>
     <style>
         body, html {
             height: 100%;
@@ -21,6 +23,7 @@
             align-items: center;
             justify-content: center;
             transition: background-color 0.3s ease-in-out;
+	    font-family: 'Lato', sans-serif;
         }
         #video {
             position: absolute;
@@ -28,13 +31,47 @@
         #overlay {
             position: absolute;
         }
+
+        #donation-link {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        #donation-link a {
+            color: white; /* White text color */
+            text-decoration: underline; /* Remove underline */
+        }
+        #donation-link a:hover, 
+        #donation-link a:visited, 
+        #donation-link a:focus, 
+        #donation-link a:active {
+            color: white; /* Ensure the link remains white in all states */
+        }
+
+    video {
+        opacity: 0; /* Make the video transparent */
+        position: absolute; /* Remove it from document flow */
+    }
+
     </style>
 </head>
 <body>
-    <video id="video" width="710" height="560" autoplay muted></video>
-    <canvas id="overlay" width="720" height="560"></canvas> <!-- Added canvas element -->
+
+    <video id="video" width="1" height="1" autoplay muted></video>
     <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.7.0/dist/tf.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
     <script defer src="script.js"></script>
+<div id="donation-link">
+    <a href="https://buymeacoffee.com/aakhmurets" target="_blank" rel="noopener noreferrer">
+        Support this Project
+    </a>
+</div>
+
 </body>
 </html>
