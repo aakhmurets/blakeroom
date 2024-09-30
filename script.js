@@ -1,12 +1,13 @@
 // Function to check if the user is on a mobile device
 function isMobileDevice() {
+    // Enhanced detection for mobile devices using the user agent
     return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
 // Execute this function as soon as the script loads
 if (isMobileDevice()) {
-    // Display a notification to the user
-    // alert("Sorry, this app is not currently supported on mobile devices. Please visit from a desktop browser.");
+    // Display a notification to the user if on mobile
+    alert("Sorry, this app is not currently supported on mobile devices. Please visit from a desktop browser.");
 
     // Show a custom message on the page and stop further execution
     document.body.innerHTML = `
@@ -17,8 +18,9 @@ if (isMobileDevice()) {
         </div>
     `;
 } else {
-    // Only execute the main logic if the device is not mobile
+    console.log("Not a mobile device. Proceeding with desktop initialization.");
 
+    // Only execute the main logic if the device is not mobile
     // Variables to track gaze detection history
     let gazeHistory = [];
     const maxHistoryLength = 10;  // Number of frames to keep in history for smoothing
@@ -27,24 +29,54 @@ if (isMobileDevice()) {
     // Load Models
     async function loadModels() {
         try {
+            console.log("Loading models...");
             await faceapi.nets.tinyFaceDetector.loadFromUri('./models');
             await faceapi.nets.faceLandmark68Net.loadFromUri('./models');
             console.log("Models loaded successfully.");
         } catch (error) {
             console.error("Error loading models:", error);
+            document.body.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <h1>Blakeroom</h1>
+                    <p>Sorry, there was an error loading the models. Please check your internet connection or try again later.</p>
+                    <p>Error: ${error.name} - ${error.message}</p>
+                </div>
+            `;
         }
     }
 
+    // Setup Camera
     async function setupCamera() {
         const video = document.getElementById('video');
+
+        const constraints = {
+            video: {
+                facingMode: 'user', // Use the front camera if available
+                width: { ideal: 640 }, // Lower the resolution to make it more compatible
+                height: { ideal: 480 }
+            }
+        };
+
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+            console.log("Setting up camera...");
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
             video.srcObject = stream;
-            await video.play();
-            console.log("Camera setup complete.");
+            video.onloadedmetadata = () => {
+                video.play();
+                console.log("Camera setup complete and video is playing.");
+            };
         } catch (error) {
-            console.error("Error accessing camera:", error);
-            alert("Camera access is required to use this app. Please enable camera permissions.");
+            console.error("Error accessing camera with constraints:", error);
+            alert(`Camera access error: ${error.name} - ${error.message}. Please enable camera permissions in your device settings or try again from a desktop browser.`);
+            
+            document.body.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <h1>Blakeroom</h1>
+                    <p>Sorry, the app cannot access your camera. Please check your permissions and try again.</p>
+                    <p>Error: ${error.name} - ${error.message}</p>
+                    <p>If the problem persists, please try using a desktop browser instead.</p>
+                </div>
+            `;
         }
     }
 
@@ -98,14 +130,22 @@ if (isMobileDevice()) {
     // Main function to start the app
     async function main() {
         try {
+            console.log("Initializing app...");
             await loadModels();
             await setupCamera();
             analyzeFrames();
         } catch (error) {
             console.error("Error initializing app:", error);
+            document.body.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <h1>Blakeroom</h1>
+                    <p>Sorry, there was an error initializing the app. Please try again later.</p>
+                    <p>Error: ${error.name} - ${error.message}</p>
+                </div>
+            `;
         }
     }
 
-    // Run the main function
+    // Run the main function only if not on a mobile device
     main();
 }
