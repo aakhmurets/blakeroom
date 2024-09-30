@@ -54,10 +54,41 @@
             color: white; /* Ensure the link remains white in all states */
         }
 
-    video {
-        opacity: 0; /* Make the video transparent */
-        position: absolute; /* Remove it from document flow */
-    }
+        .video-container {
+            position: relative;
+            width: 640px;
+            height: 480px;
+            border: 1px solid #ddd;
+            background: #333; /* Background color to ensure visibility */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #video {
+            width: 640px;
+            height: 480px;
+            border: 1px solid #ccc;
+            display: block;
+            opacity: 0; /* Make the video transparent */
+#face-detection-message {
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 0, 0, 0.8); /* Red background for visibility */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 18px;
+    display: none; /* Hidden by default */
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+
+body.face-not-detected #face-detection-message {
+    display: block; /* Show the message when no face is detected */
+}
+        }
 
     </style>
 
@@ -76,6 +107,9 @@
     <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.7.0/dist/tf.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
     <script defer src="script.js"></script>
+   <div id="face-detection-message">
+        <h2>No face detected. Please position yourself in front of the camera.</h2>
+    </div>
 <div id="donation-link">
     <a href="https://buymeacoffee.com/aakhmurets" target="_blank" rel="noopener noreferrer">
 	Did it help? <u>Let me know!</u>

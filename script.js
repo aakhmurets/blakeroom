@@ -97,19 +97,29 @@ if (isMobileDevice()) {
         // Determine if the user is looking at the screen based on alignment of eye center and nose
         return Math.abs(eyeCenterX - noseX) < sensitivityThreshold;
     }
-
+    	let faceDetectedOnce = false;
     // Function to analyze video frames and detect gaze
     async function analyzeFrames() {
         const video = document.getElementById('video');
         const options = new faceapi.TinyFaceDetectorOptions();
-
-        video.addEventListener('play', () => {
-            setInterval(async () => {
+        const faceDetectionMessage = document.getElementById('face-detection-message');
+        
+        	video.addEventListener('play', () => {
+           console.log("Video playing. Analyzing frames..."); 
+	   setInterval(async () => {
                 try {
                     const detections = await faceapi.detectSingleFace(video, options).withFaceLandmarks();
                     if (detections && detections.landmarks) {
                         const lookingAtScreen = isLookingAtScreen(detections.landmarks);
-
+			console.log("Face detected:", detections.landmarks);
+		        if (!faceDetectedOnce){
+				console.log("Face detected. Removing 'face-not-detected' class.");
+  	   	        
+  				document.body.classList.remove('face-not-detected');
+                        	faceDetectionMessage.style.display = 'none';
+			}
+			// Remember that face was detected, so the message goes away
+			faceDetectedOnce = true;
                         // Maintain a history of gaze detections
                         gazeHistory.push(lookingAtScreen);
                         if (gazeHistory.length > maxHistoryLength) gazeHistory.shift();  // Keep history size manageable
@@ -119,11 +129,16 @@ if (isMobileDevice()) {
 
                         // Set background color based on smoothed detection result
                         document.body.style.backgroundColor = lookingAtScreenSmoothed ? 'green' : 'red';
-                    }
+                    } else {
+                    if (!faceDetectedOnce) {
+                        console.warn("No face detected. Displaying message.");
+                        document.body.classList.add('face-not-detected');
+                        faceDetectionMessage.style.display = 'block';}
+}
                 } catch (error) {
                     console.error("Error during frame analysis:", error);
                 }
-            }, 100);  // Adjust interval as needed for performance
+            }, 200);  // Adjust interval as needed for performance
         });
     }
 
