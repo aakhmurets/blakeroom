@@ -63,6 +63,27 @@ async function main() {
     await loadModels();
     await setupCamera();
     analyzeFrames();
+function isMobileDevice() {
+    return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+// Execute this function on page load
+document.addEventListener('DOMContentLoaded', () => {
+    if (isMobileDevice()) {
+        // Display a notification to the user
+        alert("Sorry, this app is not currently supported on mobile devices. Please visit from a desktop browser.");
+
+        // Optional: Show a custom message on the page
+        document.body.innerHTML = `
+            <div style="text-align: center; padding: 20px;">
+                <h1>Blakeroom</h1>
+                <p>Sorry, this app is not supported on mobile devices at the moment.</p>
+                <p>Please try again from a desktop browser.</p>
+            </div>
+        `;
+    }
+});
+
 }
 
 main();
